@@ -12,6 +12,7 @@ import Hero from "@/components/Hero";
 import Cocktails from "@/components/Cocktails";
 import About from "@/components/About";
 import Art from "@/components/Art";
+import Menu from "@/components/Menu";
 
 export default function LandingPage() {
   return (
@@ -21,6 +22,7 @@ export default function LandingPage() {
       <Cocktails />
       <About />
       <Art />
+      <Menu />
     </main>
   );
 }
