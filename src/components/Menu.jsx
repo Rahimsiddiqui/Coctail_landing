@@ -7,37 +7,50 @@ import gsap from "gsap";
 
 const Menu = () => {
   const contentRef = useRef(null);
+  const tlRef = useRef(null);
   const [currentIdx, setCurrentIdx] = useState(0);
   const [direction, setDirection] = useState(1);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   useGSAP(() => {
-    const ctl = gsap.timeline();
-
-    ctl
-      .from(".cocktail img", {
+    if (tlRef.current) tlRef.current.kill();
+  
+    const tl = gsap.timeline({
+      onComplete: () => setIsAnimating(false),
+    });
+  
+    tlRef.current = tl;
+  
+    tl.from(".cocktail img", {
+      opacity: 0,
+      xPercent: 40 * direction,
+      scale: 0.8,
+      duration: 0.6,
+    })
+      .from("#title", {
         opacity: 0,
-        xPercent: 40 * direction,
-        scale: 0.8,
-        duration: 0.6,
-      })
-      .from(
-        "#title",
-        {
-          opacity: 0,
-          yPercent: 35,
-          duration: 0.5,
-        },
-        "-=0.25",
-      )
-      .from(".details", { opacity: 0, yPercent: 35, duration: 0.5 }, "-=0.25");
+        yPercent: 35,
+        duration: 0.5,
+      }, "-=0.25")
+      .from(".details", {
+        opacity: 0,
+        yPercent: 35,
+        duration: 0.5,
+      }, "-=0.25");
+  
+    return () => tl.kill();
   }, [currentIdx]);
 
   const totalCocktails = allCocktails.length;
 
   const goToSlide = (idx) => {
+    if (isAnimating) return;
+  
+    setIsAnimating(true);
+  
     const newIdx = (idx + totalCocktails) % totalCocktails;
     setDirection(idx > currentIdx ? -1 : 1);
-
+  
     setCurrentIdx(newIdx);
   };
 
